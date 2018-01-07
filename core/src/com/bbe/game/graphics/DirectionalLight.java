@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.bbe.game.Wolfenstein;
+import com.bbe.game.utils.ScreenshotFactory;
 
 public class DirectionalLight extends Light
 {
@@ -78,7 +80,11 @@ public class DirectionalLight extends Light
         modelBatch.render(modelInstance);
         modelBatch.end();
 
-        //ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmap");
+        if (Wolfenstein.takeScreenshots)
+        {
+            ScreenshotFactory.saveScreenshot(frameBuffer.getWidth(), frameBuffer.getHeight(), "depthmap");
+        }
+
         frameBuffer.end();
         depthMap = frameBuffer.getColorBufferTexture();
     }

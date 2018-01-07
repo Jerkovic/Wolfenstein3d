@@ -1,6 +1,5 @@
 package com.bbe.game.graphics;
 
-
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Attributes;
@@ -14,9 +13,16 @@ import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.bbe.game.Wolfenstein;
 
-public class DepthMapShader extends BaseShader
+import java.util.ArrayList;
+
+/**
+ * Shader used to render multiple shadows on the main scene.
+ * This shader will render the scene multiple times, adding shadows for one light at a time
+ */
+public class ShadowMapShader extends BaseShader
 {
     public Renderable renderable;
+    private Wolfenstein wolf;
 
     @Override
     public void end()
@@ -24,8 +30,9 @@ public class DepthMapShader extends BaseShader
         super.end();
     }
 
-    public DepthMapShader( final Renderable renderable, final ShaderProgram shaderProgramModelBorder)
+    public ShadowMapShader(final Wolfenstein wolf, final Renderable renderable, final ShaderProgram shaderProgramModelBorder)
     {
+        this.wolf = wolf;
         this.renderable = renderable;
         this.program = shaderProgramModelBorder;
         register(Inputs.worldTrans, Setters.worldTrans);
@@ -81,7 +88,29 @@ public class DepthMapShader extends BaseShader
     @Override
     public void render(final Renderable renderable, final Attributes combinedAttributes)
     {
-        super.render(renderable, combinedAttributes);
+        boolean firstCall = true;
+        for (final Light light : wolf.lights)
+        {
+            light.applyToShader(program);
+            if (firstCall)
+            {
+                // Classic depth test
+                context.setDepthTest(GL20.GL_LEQUAL);
+                // Deactivate blending on first pass
+                context.setBlending(false, GL20.GL_ONE, GL20.GL_ONE);
+                super.render(renderable, combinedAttributes);
+                firstCall = false;
+            }
+            else
+            {
+                // We could use the classic depth test (less or equal), but strict equality works fine on next passes as depth buffer already contains our scene
+                context.setDepthTest(GL20.GL_EQUAL);
+                // Activate additive blending
+                context.setBlending(true, GL20.GL_ONE, GL20.GL_ONE);
+                // Render the mesh again
+                renderable.meshPart.render(program);
+            }
+        }
     }
 
 }

@@ -1,6 +1,5 @@
 package com.bbe.game.graphics;
 
-
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g3d.Attributes;
@@ -12,11 +11,10 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Inputs;
 import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader.Setters;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.bbe.game.Wolfenstein;
 
-public class DepthMapShader extends BaseShader
+public class SimpleTextureShader extends BaseShader
 {
-    public Renderable renderable;
+    public Renderable	renderable;
 
     @Override
     public void end()
@@ -24,13 +22,14 @@ public class DepthMapShader extends BaseShader
         super.end();
     }
 
-    public DepthMapShader( final Renderable renderable, final ShaderProgram shaderProgramModelBorder)
+    public SimpleTextureShader(final Renderable renderable, final ShaderProgram shaderProgramModelBorder)
     {
         this.renderable = renderable;
         this.program = shaderProgramModelBorder;
         register(Inputs.worldTrans, Setters.worldTrans);
         register(Inputs.projViewTrans, Setters.projViewTrans);
         register(Inputs.normalMatrix, Setters.normalMatrix);
+        register(Inputs.diffuseTexture, Setters.diffuseTexture);
 
     }
 

@@ -27,3 +27,5 @@ void main()
     v_positionLightTrans = u_lightTrans * v_position;
     gl_Position = u_projViewTrans * v_position;
 }
+
+

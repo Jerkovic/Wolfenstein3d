@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.Shader;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultShaderProvider;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import com.bbe.game.Wolfenstein;
 import com.bbe.game.utils.Logger;
 
 public abstract class Light
@@ -18,11 +19,13 @@ public abstract class Light
     public Camera				camera;
     public Vector3				position		= new Vector3();
     public boolean				needsUpdate		= true;
+    private Wolfenstein wolf;
 
     public abstract void act(float delta);
 
     public Light()
     {
+        //this.wolf = wolf;
     }
 
     /**
