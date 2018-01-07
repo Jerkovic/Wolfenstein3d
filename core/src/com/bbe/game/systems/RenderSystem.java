@@ -5,8 +5,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.badlogic.gdx.graphics.g3d.ModelInstance;
-import com.badlogic.gdx.utils.Array;
 import com.bbe.game.components.MeshComponent;
 import com.bbe.game.components.TransformComponent;
 import com.bbe.game.utils.Logger;
@@ -52,6 +50,9 @@ public class RenderSystem extends EntitySystem {
         }
 
         modelBatch.end();
+
+
+
 
 
     }
