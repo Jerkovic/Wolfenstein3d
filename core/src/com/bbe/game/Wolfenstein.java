@@ -65,7 +65,7 @@ public class Wolfenstein implements ApplicationListener {
 		engine.addEntityListener(new TestListener());
 
 		// Create entities
-		for (float i = 0; i < 10; i++) {
+		for (float i = 0; i < 1; i++) {
 			instance = new ModelInstance(model, 3f, 0f, 0f);
 			EntityFactory.createPlayer(engine, new Vector3(i * 15f,0,0), instance);
 			instance = null;

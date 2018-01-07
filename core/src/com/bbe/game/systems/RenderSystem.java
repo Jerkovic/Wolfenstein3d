@@ -14,9 +14,8 @@ import com.bbe.game.utils.Logger;
 
 public class RenderSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
-
-
-    private ComponentMapper<MeshComponent> pm = ComponentMapper.getFor(MeshComponent.class);
+    private ComponentMapper<MeshComponent> mcm = ComponentMapper.getFor(MeshComponent.class);
+    private ComponentMapper<TransformComponent> tcm = ComponentMapper.getFor(TransformComponent.class);
     private ModelBatch modelBatch;
     private PerspectiveCamera camera;
     private Environment e;
@@ -34,23 +33,26 @@ public class RenderSystem extends EntitySystem {
     @Override
     public void update(float deltaTime)
     {
-        // get the renderable Model instances
-        Array<ModelInstance> instances = new Array<ModelInstance>();
-        for(int i=0; i < entities.size(); i++)
-        {
-            Entity entity = entities.get(i);
-            ModelInstance model = entity.getComponent(MeshComponent.class).model;
-            TransformComponent transform = entity.getComponent(TransformComponent.class);
-            //Logger.log("Model Transform scale " + model.transform.getScaleX());
-            model.transform.setToTranslation(transform.position);
-            instances.add(model);
-        }
-        // end get
+        MeshComponent meshComponent;
+        TransformComponent transformComponent;
 
-        Logger.log("Rendering model instances");
+        Logger.log("Render model instances:" + entities.size());
+
         modelBatch.begin(camera);
-		    modelBatch.render(instances, e);
-		modelBatch.end();
+
+        for (int i = 0; i < entities.size(); ++i) {
+            Entity entity = entities.get(i);
+            meshComponent = mcm.get(entity);
+            transformComponent = tcm.get(entity);
+
+            meshComponent.model.transform.setToTranslation(transformComponent.position);
+            modelBatch.render(meshComponent.model, e);
+
+            Logger.log("RenderSystem render " + entity);
+        }
+
+        modelBatch.end();
+
 
     }
 
