@@ -5,15 +5,11 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
-import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
-import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.UBJsonReader;
 import com.bbe.game.components.listener.TestListener;
@@ -70,7 +66,7 @@ public class Wolfenstein implements ApplicationListener {
 
 	}
 
-	public ModelInstance loadScene() {
+	private ModelInstance loadScene() {
 		final G3dModelLoader loader = new G3dModelLoader(new UBJsonReader());
 		model = loader.loadModel(Gdx.files.internal("models/scene_f0.g3db"));
 		ModelInstance modelInstance = new ModelInstance(model);
