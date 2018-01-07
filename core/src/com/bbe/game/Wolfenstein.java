@@ -4,10 +4,13 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
@@ -48,10 +51,25 @@ public class Wolfenstein implements ApplicationListener {
 		modelBatch = new ModelBatch();
 
 		ModelBuilder modelBuilder = new ModelBuilder();
-		model = modelBuilder.createBox(3f, 3f, 3f,
-				new Material(ColorAttribute.createDiffuse(Color.GREEN)),
-				VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal);
 
+		TextureRegion textureRegion = new TextureRegion(texture, 0, 0, 256, 256);
+
+		int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
+		modelBuilder.begin();
+		MeshPartBuilder meshPartBuilder = modelBuilder.part("box", GL20.GL_TRIANGLES, attr, new Material(TextureAttribute.createDiffuse(texture)));
+		meshPartBuilder.setUVRange(textureRegion);
+		meshPartBuilder.rect(-0.5f,-0.5f,-0.5f, -0.5f, 0.5f, -0.5f, 0.5f,0.5f,-0.5f, 0.5f,-0.5f,-0.5f, 0, 0, -1);
+		meshPartBuilder.setUVRange(textureRegion);
+		meshPartBuilder.rect(-0.5f,0.5f,0.5f, -0.5f,-0.5f,0.5f,  0.5f,-0.5f,0.5f, 0.5f,0.5f,0.5f, 0,0,1);
+		meshPartBuilder.setUVRange(textureRegion);
+		meshPartBuilder.rect(-0.5f,-0.5f,0.5f, -0.5f,-0.5f,-0.5f,  0.5f,-0.5f,-0.5f, 0.5f,-0.5f,0.5f, 0,-1,0);
+		meshPartBuilder.setUVRange(textureRegion);
+		meshPartBuilder.rect(-0.5f,0.5f,-0.5f, -0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 0.5f,0.5f,-0.5f, 0,1,0);
+		meshPartBuilder.setUVRange(textureRegion);
+		meshPartBuilder.rect(-0.5f,-0.5f,0.5f, -0.5f,0.5f,0.5f,  -0.5f,0.5f,-0.5f, -0.5f,-0.5f,-0.5f, -1,0,0);
+		meshPartBuilder.setUVRange(textureRegion);
+		meshPartBuilder.rect(0.5f,-0.5f,-0.5f, 0.5f,0.5f,-0.5f,  0.5f,0.5f,0.5f, 0.5f,-0.5f,0.5f, 1,0,0);
+		model = modelBuilder.end();
 
 
 		camController = new CameraInputController(cam);
@@ -65,7 +83,7 @@ public class Wolfenstein implements ApplicationListener {
 		engine.addEntityListener(new TestListener());
 
 		// Create entities
-		for (float i = 0; i < 1; i++) {
+		for (float i = 0; i < 5000; i++) {
 			instance = new ModelInstance(model, 3f, 0f, 0f);
 			EntityFactory.createPlayer(engine, new Vector3(i * 15f,0,0), instance);
 			instance = null;
