@@ -1,8 +1,6 @@
 package com.bbe.game;
 
 import com.badlogic.ashley.core.Engine;
-import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -25,12 +23,11 @@ public class Wolfenstein implements ApplicationListener {
 
 	private Engine engine; // Ashley ecs
 	private Environment environment;
-	public PerspectiveCamera cam;
-	public ModelBatch modelBatch;
-	public Model model;
-	public ModelInstance instance;
-	public CameraInputController camController;
-
+	private PerspectiveCamera cam;
+	private ModelBatch modelBatch;
+	private Model model;
+	private ModelInstance instance;
+	private CameraInputController camController;
 
 	@Override
 	public void create () {
@@ -41,7 +38,7 @@ public class Wolfenstein implements ApplicationListener {
 		environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
 
 		cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		cam.position.set(10f, 10f, 10f);
+		cam.position.set(6f, 6f, 6f);
 		cam.lookAt(0,0,0);
 		cam.near = 1f;
 		cam.far = 300f;
@@ -69,7 +66,7 @@ public class Wolfenstein implements ApplicationListener {
 
 		// Create entities
 		for (float i = 0; i < 10; i++) {
-			instance = new ModelInstance(model);
+			instance = new ModelInstance(model, 3f, 0f, 0f);
 			EntityFactory.createPlayer(engine, new Vector3(i * 15f,0,0), instance);
 			instance = null;
 		}
