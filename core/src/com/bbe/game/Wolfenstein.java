@@ -3,15 +3,13 @@ package com.bbe.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
 import com.bbe.game.components.listener.TestListener;
 import com.bbe.game.entities.EntityFactory;
@@ -28,6 +26,7 @@ public class Wolfenstein implements ApplicationListener {
 	private Model model;
 	private ModelInstance instance;
 	private CameraInputController camController;
+	// private FrameBuffer fbo;
 
 	@Override
 	public void create () {
@@ -44,8 +43,9 @@ public class Wolfenstein implements ApplicationListener {
 		cam.far = 300f;
 		cam.update();
 
-		modelBatch = new ModelBatch();
+		Texture texture = new Texture(Gdx.files.internal("textures/badlogic.jpg"));
 
+		modelBatch = new ModelBatch();
 
 		ModelBuilder modelBuilder = new ModelBuilder();
 		model = modelBuilder.createBox(3f, 3f, 3f,
