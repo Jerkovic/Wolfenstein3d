@@ -21,11 +21,6 @@ public class TransformSystem extends EntitySystem {
         for (int i = 0; i < entities.size(); ++i) {
             Entity entity = entities.get(i);
             TransformComponent transform = pm.get(entity);
-
-            transform.position.x += .5 * deltaTime;
-            transform.position.y += .5 * deltaTime;
-            transform.position.z += .5 * deltaTime;
-
             Logger.log("TransformSystem updating " + entity);
         }
     }

@@ -3,22 +3,28 @@ package com.bbe.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.UBJsonReader;
 import com.bbe.game.components.listener.TestListener;
 import com.bbe.game.entities.EntityFactory;
+import com.bbe.game.graphics.Light;
 import com.bbe.game.systems.RenderSystem;
 import com.bbe.game.systems.TransformSystem;
 import com.bbe.game.utils.Logger;
+
+import java.util.ArrayList;
+
 
 public class Wolfenstein implements ApplicationListener {
 
@@ -29,6 +35,7 @@ public class Wolfenstein implements ApplicationListener {
 	private Model model;
 	private ModelInstance instance;
 	private CameraInputController camController;
+	public ArrayList<Light> lights = new ArrayList<Light>();
 	// private FrameBuffer fbo;
 
 	@Override
@@ -46,35 +53,11 @@ public class Wolfenstein implements ApplicationListener {
 		cam.far = 300f;
 		cam.update();
 
-		Texture texture = new Texture(Gdx.files.internal("textures/badlogic.jpg"));
-
 		modelBatch = new ModelBatch();
-
-		ModelBuilder modelBuilder = new ModelBuilder();
-
-		TextureRegion textureRegion = new TextureRegion(texture, 0, 0, 256, 256);
-
-		int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
-		modelBuilder.begin();
-		MeshPartBuilder meshPartBuilder = modelBuilder.part("box", GL20.GL_TRIANGLES, attr, new Material(TextureAttribute.createDiffuse(texture)));
-		meshPartBuilder.setUVRange(textureRegion);
-		meshPartBuilder.rect(-0.5f,-0.5f,-0.5f, -0.5f, 0.5f, -0.5f, 0.5f,0.5f,-0.5f, 0.5f,-0.5f,-0.5f, 0, 0, -1);
-		meshPartBuilder.setUVRange(textureRegion);
-		meshPartBuilder.rect(-0.5f,0.5f,0.5f, -0.5f,-0.5f,0.5f,  0.5f,-0.5f,0.5f, 0.5f,0.5f,0.5f, 0,0,1);
-		meshPartBuilder.setUVRange(textureRegion);
-		meshPartBuilder.rect(-0.5f,-0.5f,0.5f, -0.5f,-0.5f,-0.5f,  0.5f,-0.5f,-0.5f, 0.5f,-0.5f,0.5f, 0,-1,0);
-		meshPartBuilder.setUVRange(textureRegion);
-		meshPartBuilder.rect(-0.5f,0.5f,-0.5f, -0.5f,0.5f,0.5f,  0.5f,0.5f,0.5f, 0.5f,0.5f,-0.5f, 0,1,0);
-		meshPartBuilder.setUVRange(textureRegion);
-		meshPartBuilder.rect(-0.5f,-0.5f,0.5f, -0.5f,0.5f,0.5f,  -0.5f,0.5f,-0.5f, -0.5f,-0.5f,-0.5f, -1,0,0);
-		meshPartBuilder.setUVRange(textureRegion);
-		meshPartBuilder.rect(0.5f,-0.5f,-0.5f, 0.5f,0.5f,-0.5f,  0.5f,0.5f,0.5f, 0.5f,-0.5f,0.5f, 1,0,0);
-		model = modelBuilder.end();
 
 
 		camController = new CameraInputController(cam);
 		Gdx.input.setInputProcessor(camController);
-
 
 		// Setup engine and register systems
 		this.engine = new Engine();
@@ -83,13 +66,16 @@ public class Wolfenstein implements ApplicationListener {
 		engine.addEntityListener(new TestListener());
 
 
-		// Create entities
-		for (float i = 0; i < 1; i++) {
-			instance = new ModelInstance(model, 3f, 0f, 0f);
-			EntityFactory.createPlayer(engine, new Vector3(i * 15f,0,0), instance);
-			instance = null;
-		}
+		EntityFactory.createPlayer(engine, new Vector3(0,0,0), loadScene());
 
+	}
+
+	public ModelInstance loadScene() {
+		final G3dModelLoader loader = new G3dModelLoader(new UBJsonReader());
+		model = loader.loadModel(Gdx.files.internal("models/scene_f0.g3db"));
+		ModelInstance modelInstance = new ModelInstance(model);
+		modelInstance.transform.setToScaling(4f, 4f, 4f);
+		return modelInstance;
 	}
 
 	@Override
@@ -105,6 +91,11 @@ public class Wolfenstein implements ApplicationListener {
 
 	@Override
 	public void render () {
+
+		// Input ctrl should not be here!!
+		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			Gdx.app.exit();
+		}
 
 		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
